@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "0.12"
+  - "iojs"
+branches:
+  only:
+    - master
+sudo: false
+matrix:
+  fast_finish: true
+before_script:
+  - chmod 555 ./server/keys/makecerts.sh
+  - (cd server/keys && exec ./makecerts.sh 127.0.0.1)

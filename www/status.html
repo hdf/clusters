@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clusters Monitor UI</title>
+  <link rel="stylesheet" media="screen" href="static/css/normalize.min.css">
+  <link rel="stylesheet" media="screen" href="static/css/foundation.min.css">
+  <link rel="stylesheet" media="screen" href="static/css/custom.css">
+  <link rel="icon" href="favicon.ico" type="image/png">
+  <link rel="localization" href="static/locale/locale.json">
+  <script>
+var source, state, current = '', currentHeight, rendering_inprogress = false;
+{{{state}}}
+
+if (typeof(render) == 'undefined') {
+  var render = [];
+  function renderer() {
+    for (var i = 0, n = render.length; i < n; i++)
+      render[i]();
+  }
+}
+
+function eventSetup() {
+  if (!window.EventSource) return; // No SSE support
+  if (typeof(source) == 'object' && source.readyState != EventSource.CLOSED) source.close(); // Only 1 connection please
+  source = new EventSource('status_source');
+  source.onmessage = function(e) {
+    state = JSON.parse(e.data);
+    renderStatus();
+  };
+  source.onerror = function(e) {
+    if (e.readyState != EventSource.CLOSED)
+      setTimeout(eventSetup, 1500); // Supposed to be done by the browser, but does not seem to work, so we take care of it ourselves
+  };
+}
+eventSetup();
+
+var proj_template = '        <div>\
+          <div onclick="switcher(this)" class="proj_name%opened%">%name%</div>\
+          <div class="packages slider%closed%">\
+%pkg%\
+          </div>\
+        </div>' + '\n';
+var statuses_template = '        <div>\
+          <div onclick="switcher(this)" class="proj_status%opened%">%proj_state%</div>\
+          <div class="packages_statuses slider%closed%">\
+%pkg_state%\
+          </div>\
+        </div>' + '\n';
+
+function template(html, data){
+  return html.replace(/%(\w*)%/gm,function(m,key){return data.hasOwnProperty(key)?data[key]:'';});
+}
+
+function renderStatus() {
+  if (rendering_inprogress) return;
+  rendering_inprogress = true;
+  //console.log(JSON.stringify(state));
+  var projects = '', statuses = '', proj_state, pkg, pkg_state, pkg_keys, c, o, opened = -1;
+   for (var i = 0, n = state.length; i < n; i++) {
+    pkg = '';
+    pkg_state = '';
+    pkg_keys = Object.keys(state[i].pkgs);
+    for (var i2 = 0, n2 = pkg_keys.length; i2 < n2; i2++) {
+      pkg += '<div>' + state[i].name + '_' + pkg_keys[i2] + '</div>\n';
+      pkg_state += '<div>';
+      if (state[i].pkgs[pkg_keys[i2]].t)         pkg_state += '<span data-l10n-id="pkg_t"></span>' + new Date(state[i].pkgs[pkg_keys[i2]].t).toLocaleString() + '<br>\n';
+      if (state[i].pkgs[pkg_keys[i2]].lt)        pkg_state += '<span data-l10n-id="pkg_lt"></span>' + new Date(state[i].pkgs[pkg_keys[i2]].lt).toLocaleString() + '<br>\n';
+      if (state[i].pkgs[pkg_keys[i2]].completed) pkg_state += '<span data-l10n-id="pkg_completed"></span>' + state[i].pkgs[pkg_keys[i2]].completed + '<br>\n';
+      pkg_state += '<progress value="' + ((state[i].pkgs[pkg_keys[i2]].completed)?state[i].pkgs[pkg_keys[i2]].completed:'0') + '" max="' + state[i].pkgsize + '"></progress>';
+      pkg_state += '<button class="reset_button" data-l10n-id="reset" onclick="reset(\'' + state[i].name + '_' + pkg_keys[i2] + '\')"></button>';
+      pkg_state += '\n</div>\n';
+    }
+    proj_state = '<div><span data-l10n-id="remaining_pkg"></span>' + state[i].packages +
+                 '\n<span data-l10n-id="completed_pkg"></span>' + state[i].completed +
+                 '\n<span data-l10n-id="pkg_size"></span>' + state[i].pkgsize +
+                 '\n<progress value="' + state[i].completed + '" max="' + (state[i].packages + state[i].completed) + '"></progress>' +
+                 '<button class="reset_button" data-l10n-id="dl_res" ' + ((state[i].completed > 0 && state[i].packages == 0)?'onclick="dl(\'' + state[i].name + '\')"':'disabled') + '></button>' +
+                 '</div>\n';
+    if (state[i].name != current) {
+      c = ' closed';
+      o = '';
+    } else {
+      c = '" style="max-height: ' + currentHeight + ';';
+      o = ' opened';
+      opened = i;
+    }
+    projects += template(proj_template, {name: state[i].name, pkg: pkg, closed: c, opened: o});
+    statuses += template(statuses_template, {proj_state: proj_state, pkg_state: pkg_state, closed: c, opened: o});
+  }
+  document.getElementById('projects').innerHTML = projects;
+  document.getElementById('statuses').innerHTML = statuses;
+  try { // Sometimes l20n does not work immediately, when already cached
+    document.l10n.localizeNode(document.getElementsByClassName('projects')[0]);
+  } catch(err) {
+    setTimeout(renderStatus, 100);
+  }
+  heightAdjuster();
+  if (current == '')
+    window.onresize();
+  if (opened >= 0)
+    switcher(document.getElementById('projects').children[opened].children[0], true);
+  rendering_inprogress = false;
+}
+
+function heightAdjuster() {
+  var p = document.getElementById('projects').children;
+  var s = document.getElementById('statuses').children;
+  var h;
+  for (var i = 0, n = p.length; i < n; i++) {
+    p[i].children[0].style.height = s[i].children[0].scrollHeight + 'px';
+    s[i].children[0].style.height = s[i].children[0].scrollHeight + 'px';
+    for (var i2 = 0, n2 = p[i].children[1].children.length; i2 < n2; i2++) {
+      if (s[i].children[1].style.maxHeight == '') continue;
+      h = parseInt(s[i].children[1].style.maxHeight.slice(0, -2)) / n2;
+      p[i].children[1].style.maxHeight = s[i].children[1].style.maxHeight;
+      p[i].children[1].children[i2].style.height = h + 'px';
+    }
+  }
+}
+
+function switcher(e, setnew) { // Accordion
+  var nodeList = Array.prototype.slice.call(e.parentNode.parentNode.children);
+  var n = nodeList.indexOf(e.parentNode);
+  var e1 = document.getElementById('projects').children[n].children[1];
+  var e2 = document.getElementById('statuses').children[n].children[1];
+  //e1.style.maxHeight = ((e1.offsetHeight == 0)?e1.scrollHeight:0) + 'px';
+  if (e1.offsetHeight == 0 || setnew)
+    e1.style.maxHeight = e1.scrollHeight + 'px';
+  else
+    e1.removeAttribute('style');
+  if (!setnew) {
+    e1.parentNode.children[0].classList.toggle('opened');
+    e1.classList.toggle('closed');
+  }
+  //e2.style.maxHeight = ((e2.offsetHeight == 0)?e2.scrollHeight:0) + 'px';
+  if (e2.offsetHeight == 0 || setnew)
+    e2.style.maxHeight = e2.scrollHeight + 'px';
+  else
+    e2.removeAttribute('style');
+  if (!setnew) {
+    e2.parentNode.children[0].classList.toggle('opened');
+    e2.classList.toggle('closed');
+  }
+  heightAdjuster();
+  // Close all others
+  if (Array.prototype.slice.call(e1.classList).indexOf('closed') >= 0) { // Just closed it
+    current = '';
+    return;
+  } else {
+    current = e1.parentNode.children[0].innerHTML;
+    currentHeight = e1.scrollHeight + 'px';
+  }
+  var c1, c2;
+  for (var i = 0, n2 = nodeList.length; i < n2; i++) {
+    if (i == n) continue;
+    c1 = document.getElementById('projects').children[i].children[1];
+    c2 = document.getElementById('statuses').children[i].children[1];
+    c1.removeAttribute('style');
+    if (!c1.classList.contains('closed')) {
+      c1.parentNode.children[0].classList.remove('opened');
+      c1.classList.add('closed');
+    }
+    c2.removeAttribute('style');
+    if (!c2.classList.contains('closed')) {
+      c2.parentNode.children[0].classList.remove('opened');
+      c2.classList.add('closed');
+    }
+  }
+}
+
+render.splice(0, 0, renderStatus);
+
+function ajax(url, data, cb) {
+  cb = cb || function(){};
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    if (req.readyState == 4 && req.status == 200)
+      cb(req.responseText);
+  };
+  req.open('POST', url, true);
+  req.setRequestHeader('Content-type', 'application/json');
+  req.send(JSON.stringify(data));
+}
+
+function reset(pkgId) {
+  ajax('reset', {packageId: pkgId});
+}
+
+function dl(p) {
+  window.open('download?project=' + p, '_blank');
+}
+  </script>
+</head>
+<body>
+  <div class="content">
+  <div class="row middle">
+  <div class="large-6 large-centered medium-6 medium-centered small-10 small-centered columns main">
+    <h1 class="text-center">Clusters<sub> Status UI</sub></h1>
+    <span class="langs">
+      <input type="image" onclick="setLang('en')" src="static/en.png" alt="en">
+      <input type="image" onclick="setLang('hu')" src="static/hu.png" alt="hu">
+    </span>
+    <div class="row projects">
+      <div id="projects" class="large-4 medium-4 small-4 columns">
+      </div>
+      <div id="statuses" class="large-8 medium-8 small-8 columns">
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  <script src="static/l20n.min.js"></script>
+  <script src="static/main.min.js"></script>
+</body>
+</html>

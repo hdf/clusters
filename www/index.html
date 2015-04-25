@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clusters Client UI</title>
+  <link rel="stylesheet" media="screen" href="static/css/normalize.min.css">
+  <link rel="stylesheet" media="screen" href="static/css/foundation.min.css">
+  <link rel="stylesheet" media="screen" href="static/css/custom.css">
+  <link rel="icon" href="favicon.ico" type="image/png">
+  <link rel="localization" href="static/locale/locale.json">
+</head>
+<body>
+  <div class="content">
+  <div class="row middle">
+  <div class="large-6 large-centered medium-6 medium-centered small-10 small-centered columns main">
+    <h1 class="text-center">Clusters<sub> Client UI</sub></h1>
+    <span class="langs">
+      <input type="image" onclick="setLang('en')" src="static/en.png" alt="en">
+      <input type="image" onclick="setLang('hu')" src="static/hu.png" alt="hu">
+    </span>
+    <div data-l10n-id="package">Package:</div>
+    <textarea id="data"></textarea><br>
+    <div><span data-l10n-id="workernum">Number of workers to use: </span><input type="text" id="workers" pattern="\d{1,2}" maxlength="2"></div>
+    <div id="running"></div><br>
+    <button data-l10n-id="getpackage" onclick="getPackage()">Get new Package</button>
+    <button data-l10n-id="startworkers" onclick="startWorkers()">Start Workers</button>
+    <button data-l10n-id="dowork" onclick="doWork()">Do Work</button>
+    <button data-l10n-id="stopworkers" onclick="stopWorkers()">Stop Workers</button>
+    <br><br><div class="progress_container">
+      <span data-l10n-id="progress">Progress: </span>
+      <span><progress id="progress" value="0" max="100"></progress></span>
+    </div>
+    <div data-l10n-id="results">Results:</div>
+    <textarea id="results"></textarea>
+  </div>
+  </div>
+  </div>
+  <script src="static/l20n.min.js"></script>
+  <script src="static/main.min.js"></script>
+  <script src="static/func.min.js"></script>
+</body>
+</html>

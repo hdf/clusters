@@ -1,0 +1,9 @@
+*_results.json
+*.changes
+completed.json
+func.min.js
+main.min.js
+*.log
+*.key
+*.crt
+node_modules

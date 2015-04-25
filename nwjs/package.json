@@ -1,0 +1,16 @@
+{
+  "name": "clusters",
+  "node-main": "../server --port 8082",
+  "main": "https://localhost:8082/",
+  "no-edit-menu": false,
+  "single-instance": true,
+  "window": {
+    "title": "Clusters",
+    "icon": "icon.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 1024,
+    "height": 768,
+    "position": "center"
+  }
+}

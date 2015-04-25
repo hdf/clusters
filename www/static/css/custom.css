@@ -1,0 +1,163 @@
+body {
+  background: black url('../background.jpg') no-repeat fixed center center;
+}
+textarea {
+  width: 100%;
+}
+#workers {
+  width: 16px;
+  padding-left: 2px;
+}
+h1 {
+  color: black;
+  font-family: Courier New;
+  text-shadow: 1px 1px #bbb;
+  margin-top: -0.2em;
+  margin-bottom: 0.4em;
+}
+sub {
+  vertical-align: sub;
+  font-size: 30%;
+}
+.middle {
+  transition: transform 0.5s;
+  height: 100%;
+}
+.main {
+  padding: 12px 12px 6px 12px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  min-width: 250px;
+}
+.langs {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 3px 13px 0px 0px;
+}
+.langs > input {
+  margin-left: 6px;
+}
+.main > div:not(.row) {
+  padding: 0px 4px 0px 4px !important;
+  background: rgba(255, 255, 255, 0.3);
+}
+.main > div:not(.row) > div {
+  display: inline;
+}
+.main > div:not(.row):nth-of-type(1),
+.main > div:not(.row):nth-of-type(2),
+.main > div:not(.row):nth-of-type(5) {
+  border-radius: 5px 5px 0px 0px;
+}
+.main > div:not(.row):nth-of-type(3) {
+  border-radius: 0px 0px 5px 5px;
+}
+.main > div:not(.row):first-of-type, .main > div:not(.row):last-of-type {
+  float: left;
+}
+button {
+  margin: 2px 0px 2px 0px;
+}
+.progress_container {
+  display: table;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.progress_container > span {
+  display: table-cell;
+}
+.progress_container > span:nth-of-type(1) {
+  float: left;
+  padding-right: 5px;
+  margin-top: 2px;
+  margin-bottom: -6px;
+}
+.progress_container > span:nth-of-type(2) {
+  padding-right: 2px;
+  width: 100%;
+}
+#progress {
+  width: 100%;
+  margin-bottom: -2px;
+}
+
+.slider {
+  overflow-y: hidden;
+  transition: max-height 0.5s cubic-bezier(0, 1, 0.5, 1);
+}
+.slider.closed {
+  max-height: 0;
+  border-radius: 0px;
+}
+.proj_name, .proj_status {
+  cursor: pointer;
+  padding: 0px 5px 25px 5px;
+  transition: background 0.5s;
+  background: rgba(255, 255, 255, 0.3);
+}
+.opened {
+  background: rgba(80, 190, 80, 0.3);
+}
+.proj_name, .packages {
+  font-family: "Times New Roman", Times, serif;
+}
+.proj_name {
+  font-size: larger;
+  font-weight: bold;
+}
+.packages {
+  padding-left: 0.7em;
+}
+.packages > div {
+  padding-bottom: 2px;
+  border-bottom: 1px solid #ccc;
+}
+.packages > div:last-of-type {
+  border-bottom: none;
+}
+.packages_statuses {
+  padding: 0px 5px 0px 5px;
+}
+.packages_statuses > div {
+  clear: both;
+  border-top: 1px solid #ccc;
+  padding-bottom: 25px;
+}
+.packages_statuses > div:first-of-type {
+  border-top: none;
+}
+.projects {
+  transition: all 0.5s;
+  padding-bottom: 3px;
+}
+.projects progress {
+  width: 100%;
+}
+#projects {
+  padding-right: 1px;
+}
+#statuses {
+  padding-left: 1px;
+}
+#projects > div, #statuses > div {
+  background: rgba(255, 255, 255, 0.3);
+  margin-bottom: 2px;
+}
+#projects > div:first-of-type, #projects > div:first-of-type > div {
+  border-top-left-radius: 5px;
+}
+#projects > div:last-of-type, #projects > div:last-of-type > div {
+  border-bottom-left-radius: 5px;
+}
+#statuses > div:first-of-type, #statuses > div:first-of-type > div {
+  border-top-right-radius: 5px;
+}
+#statuses > div:last-of-type , #statuses > div:last-of-type > div {
+  border-bottom-right-radius: 5px;
+}
+.reset_button {
+  margin: -5px 0px 2px 0px;
+  float: right;
+  font-size: small;
+}

@@ -1,0 +1,10 @@
+{
+  "locales": [
+    "en",
+    "hu"
+  ],
+  "default_locale": "hu",
+  "resources": [
+    "./{{locale}}.l20n"
+  ]
+}

@@ -1,0 +1,18 @@
+<package "Package:">
+<workernum "Number of workers to use: ">
+<runningworkers "Running Workers: ">
+<remainingjobs "Remaining jobs: ">
+<getpackage "Get new Package">
+<startworkers "Start Workers">
+<dowork "Do Work">
+<stopworkers "Stop Workers">
+<results "Results:">
+<progress "Progress: ">
+<remaining_pkg "Remaining: ">
+<completed_pkg "Completed: ">
+<pkg_size "Elements: ">
+<pkg_t "Started: ">
+<pkg_lt "Last seen: ">
+<pkg_completed "Completed: ">
+<reset "Reset">
+<dl_res "Download results">

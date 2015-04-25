@@ -1,0 +1,11 @@
+*.md
+*.bat
+*.sh
+package.json
+todo.txt
+server/db/*
+*_results.json
+*.changes
+func.min.js
+main.min.js
+*.log

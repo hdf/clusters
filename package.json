@@ -1,0 +1,48 @@
+{
+  "name": "clusters",
+  "version": "0.0.1",
+  "description": "Data processing done on many Browsers with Web Workers.",
+  "license": "GNU AGPLv3",
+  "keywords": [
+    "clusters",
+    "Web Workers",
+    "WebWorkers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hdf/clusters.git"
+  },
+  "homepage": "https://github.com/hdf/clusters",
+  "author": {
+    "name": "hdf",
+    "email": "hdf@users.noreply.github.com"
+  },
+  "dependencies": {
+    "spdy": ">= 1.32.0",
+    "helmet": ">= 0.8.0",
+    "express": ">= 4.12.3",
+    "forever": ">= 0.14.1",
+    "hogan.js": ">= 3.0.2",
+    "compression": ">= 1.4.3",
+    "body-parser": ">= 1.12.3",
+    "basic-auth": ">= 1.0.0",
+    "consolidate": ">= 0.12.1",
+    "minimist": ">= 1.1.1",
+    "uglify-js": ">= 2.4.20",
+    "clean-css": ">= 3.2.3",
+    "serve-favicon": ">= 2.2.0"
+  },
+  "devDependencies": {
+    "mocha": ">= 2.2.4"
+  },
+  "engines": [
+    "node >= 0.12.2",
+    "iojs >= 1.8.1"
+  ],
+  "main": "server",
+  "scripts": {
+    "start": "forever start -w --minUptime 1000 --spinSleepTime 1000 server --port 8082 --forever",
+    "stop": "forever stop server",
+    "test": "mocha --reporter spec test/tests.js"
+  }
+}

@@ -1,0 +1,18 @@
+<package "Csomag:">
+<workernum "Használandó dolgozók (Workers) száma: ">
+<runningworkers "Futó dolgozók (Workers): ">
+<remainingjobs "Fennmaradó feladatok: ">
+<getpackage "Új csomag kérése">
+<startworkers "Dolgozók indítása">
+<dowork "Feldolgozás indítása">
+<stopworkers "Dolgozók leállítása">
+<results "Eredmények:">
+<progress "Feldolgozás: ">
+<remaining_pkg "Maradt: ">
+<completed_pkg "Kész: ">
+<pkg_size "Elemek: ">
+<pkg_t "Kezdve: ">
+<pkg_lt "Utoljára látva: ">
+<pkg_completed "Kész: ">
+<reset "Reset">
+<dl_res "Eredmények letöltése">
