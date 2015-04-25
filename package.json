@@ -1,7 +1,7 @@
 {
   "name": "clusters",
   "version": "0.0.1",
-  "description": "Data processing done on many Browsers with Web Workers.",
+  "description": "Data processing done on many Browsers with WebWorkers",
   "license": "GNU AGPLv3",
   "keywords": [
     "clusters",
