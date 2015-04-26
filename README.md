@@ -3,7 +3,7 @@
 >### _Work distribution system using WebWorkers_
 
 [![Build Status](https://travis-ci.org/hdf/clusters.svg)](https://travis-ci.org/hdf/clusters)
-
+<br>
 ## Installation (Windows)
 Install [io.js](https://iojs.org/)  
 Install [Chrome](https://www.google.com/chrome/browser/desktop/) and/or [Firefox](https://www.mozilla.org/en-US/firefox/all/)  
@@ -72,6 +72,35 @@ To see, how overall processing of projects is doing, and download results, navig
 The default user/password is marco/polo. (For now, can only be changed in `clusters\server\index.js`.)
 
 To remotely restart the server, navigate to https://localhost:8082/restart
+<br>
+## Optional nginx reverse proxy configuration:
+```nginx
+http {
+  ...
+
+  upstream node_clusters {
+    server localhost:8082;
+  }
+
+  server {
+    ...
+
+    location ~* ^/clusters/(.*)$ {
+      proxy_pass https://node_clusters;
+      proxy_pass_header Server;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy true;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_buffering off;
+      proxy_cache off;
+      proxy_redirect off;
+      rewrite ^/clusters(.*)$ $1 break;
+    }
+  }
+}
+```
 
 <br>
 ### LICENSE
