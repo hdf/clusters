@@ -9,3 +9,4 @@ server/db/*
 func.min.js
 main.min.js
 *.log
+.git/*

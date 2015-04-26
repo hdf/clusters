@@ -106,33 +106,73 @@ var auth = function (req, res, next) {
 };
 //}
 
-//{ Page handling
-/*function pusher(req, res) { // No difference could be measured, is express already using server push?
+//{ Server Push
+/* Disabled for now. Problems with nginx integration and compression.
+var mimes = {
+  types: {
+    'js': {'content-type': 'application/javascript'},
+    'json': {'content-type': 'application/json'},
+    'css': {'content-type': 'text/css; charset=UTF-8'},
+    'txt': {'content-type': 'text/plain; charset=UTF-8'},
+    'jpg': {'content-type': 'image/jpeg'},
+    'png': {'content-type': 'image/png'}
+  },
+  exts: {
+    '.js': 'js',
+    '.json': 'json',
+    '.jpg': 'jpg',
+    '.png': 'png',
+    '.css': 'css',
+    '.l20n': 'txt'
+  }
+};
+function mime(ext) {
+  return mimes.types[mimes.exts[ext.substr(ext.lastIndexOf('.'))]];
+}
+
+var push_files = [
+  //'background.jpg',
+  'css/normalize.min.css',
+  'css/foundation.min.css',
+  'css/custom.css',
+  'locale/locale.json',
+  'locale/en.l20n',
+  'locale/hu.l20n',
+  'en.png',
+  'hu.png',
+  'l20n.min.js',
+  'main.min.js',
+  'func.min.js'
+];
+push_cache = {};
+for (var i = 0; i < push_files.length; i++)
+  push_cache[push_files[i]] = fs.readFileSync(__dirname + '/../www/static/' + push_files[i]);
+
+function pusher(req, res) {
+  if (!res.push)
+    return;
+
   function pushHandler(err, stream) {
     stream.on('error', function(err) {
-      // Probably just resetting the stream, because the browser canceled the request
+      if (err.code != 'RST_STREAM') // Browser canceled the request (probably)
+        console.log(err);
     });
-    stream.end();
   }
-  res.push('static/background.jpg', {'content-type': 'image/jpeg'}, pushHandler);
-  res.push('static/css/normalize.css', {'content-type': 'text/css; charset=UTF-8'}, pushHandler);
-  res.push('static/css/foundation.min.css', {'content-type': 'text/css; charset=UTF-8'}, pushHandler);
-  res.push('static/css/custom.css', {'content-type': 'text/css; charset=UTF-8'}, pushHandler);
-  res.push('static/locale/locale.json', {'content-type': 'application/json'}, pushHandler);
-  res.push('static/locale/en.l20n', {'content-type': 'text/plain; charset=UTF-8'}, pushHandler);
-  res.push('static/locale/hu.l20n', {'content-type': 'text/plain; charset=UTF-8'}, pushHandler);
-  res.push('static/en.png', {'content-type': 'image/png'}, pushHandler);
-  res.push('static/hu.png', {'content-type': 'image/png'}, pushHandler);
-  res.push('static/l20n.min.js', {'content-type': 'application/javascript'}, pushHandler);
-  //res.push('static/main.js', {'content-type': 'application/javascript'}, pushHandler);
-  res.push('static/main.js', {'content-type': 'application/javascript'}, function(err, stream) {
-    stream.on('error', function(err) {});
-    stream.end('\nalert("hello from push stream!");');
-  });
-  res.push('static/func.js', {'content-type': 'application/javascript'}, pushHandler);
-}*/
+
+  function pushIt(file) {
+    res.push('/static/' + file, mime(file), pushHandler).end(push_cache[file]);
+  }
+
+  for (var i = 0; i < push_files.length; i++) {
+    pushIt(push_files[i]);
+  }
+}
+*/
+//}
+
+//{ Page handling
 app.get(/^.+\/$/, function(req, res) {
-   res.redirect(301, '/');
+  res.redirect(301, '/');
 });
 app.get('/', function(req, res) {
   //pusher(req, res);
