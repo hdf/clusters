@@ -72,6 +72,7 @@ To see, how overall processing of projects is doing, and download results, navig
 The default user/password is marco/polo. (For now, can only be changed in `clusters\server\index.js`.)
 
 To remotely restart the server, navigate to https://localhost:8082/restart
+
 <br>
 ## Optional nginx reverse proxy configuration:
 ```nginx
