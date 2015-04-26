@@ -13,7 +13,9 @@ var spdy = require('spdy'),
     UglifyJS = require("uglify-js"),
     //CleanCSS = require('clean-css'),
     favicon = require('serve-favicon'),
-    fs = require('fs');
+    fs = require('fs'),
+    zlib = require('zlib'),
+    stream = require('stream');
 
 var options = {
   key: fs.readFileSync(__dirname + '/keys/server.key'),
@@ -107,7 +109,7 @@ var auth = function (req, res, next) {
 //}
 
 //{ Server Push
-/* Disabled for now. Problems with nginx integration and compression.
+/*/ Disabled for now. Problems with nginx integration and compression.
 var mimes = {
   types: {
     'js': {'content-type': 'application/javascript'},
@@ -118,20 +120,26 @@ var mimes = {
     'png': {'content-type': 'image/png'}
   },
   exts: {
-    '.js': 'js',
-    '.json': 'json',
-    '.jpg': 'jpg',
-    '.png': 'png',
-    '.css': 'css',
-    '.l20n': 'txt'
+    '.js': ['js', true], // True menas, should be compressed.
+    '.json': ['json', true],
+    '.jpg': ['jpg'],
+    '.png': ['png'],
+    '.css': ['css', true],
+    '.l20n': ['txt', true]
   }
 };
-function mime(ext) {
-  return mimes.types[mimes.exts[ext.substr(ext.lastIndexOf('.'))]];
+function mime(file) {
+  var ext = file.substr(file.lastIndexOf('.'));
+  var ret = mimes.types[mimes.exts[ext][0]];
+  if (push_compressed.indexOf(file) >= 0) {
+    ret['content-encoding'] = 'gzip';
+    ret['accept-ranges'] = 'bytes';
+    ret['vary'] = 'accept-encoding';
+  }
+  return ret;
 }
 
 var push_files = [
-  //'background.jpg',
   'css/normalize.min.css',
   'css/foundation.min.css',
   'css/custom.css',
@@ -142,14 +150,43 @@ var push_files = [
   'hu.png',
   'l20n.min.js',
   'main.min.js',
-  'func.min.js'
+  'func.min.js',
+  'background.jpg'
 ];
-push_cache = {};
-for (var i = 0; i < push_files.length; i++)
-  push_cache[push_files[i]] = fs.readFileSync(__dirname + '/../www/static/' + push_files[i]);
+push_cache = {}, push_compressed = [];
+
+function fillPushCache() {
+  function writer(chunk, encoding, done) {
+    this.buffs.push(chunk);
+    done();
+  }
+  function errHandler(e){console.log(e);}
+  function finisher() {
+    push_cache[this.file] = Buffer.concat(this.buffs);
+    push_compressed.push(this.file);
+  }
+  var size;
+  for (var i = 0; i < push_files.length; i++) {
+    size = fs.statSync(__dirname + '/../www/static/' + push_files[i])['size'];
+    if (!mimes.exts[push_files[i].substr(push_files[i].lastIndexOf('.'))][1] || size < 1024) { // If not compressible, or too small
+      push_cache[push_files[i]] = fs.readFileSync(__dirname + '/../www/static/' + push_files[i]);
+      continue;
+    }
+    var s = new stream.Writable();
+    s.file = push_files[i];
+    s.buffs = [];
+    s._write = writer;
+    s.on('error', errHandler);
+    s.on('finish', finisher);
+    fs.createReadStream(__dirname + '/../www/static/' + push_files[i])
+      .pipe(zlib.createGzip())
+      .pipe(s);
+  }
+}
+fillPushCache();
 
 function pusher(req, res) {
-  if (!res.push)
+  if (!res.push) // If proxied through nginx
     return;
 
   function pushHandler(err, stream) {
@@ -160,14 +197,20 @@ function pusher(req, res) {
   }
 
   function pushIt(file) {
-    res.push('/static/' + file, mime(file), pushHandler).end(push_cache[file]);
+    var s = res.push('/static/' + file, mime(file), pushHandler);
+    //var bufferStream = new stream.PassThrough();
+    //bufferStream.end(push_cache[file]);
+    var bufferStream = new stream.Transform();
+    bufferStream.push(push_cache[file]);
+    bufferStream.end();
+    bufferStream.pipe(s);
   }
 
   for (var i = 0; i < push_files.length; i++) {
     pushIt(push_files[i]);
   }
 }
-*/
+/*/
 //}
 
 //{ Page handling
