@@ -145,8 +145,8 @@ var push_files = [
   'locale/locale.json',
   'locale/en.l20n',
   'locale/hu.l20n',
-  'en.png',
-  'hu.png',
+  'locale/en.png',
+  'locale/hu.png',
   'l20n.min.js',
   'main.min.js',
   'func.min.js'
