@@ -37,7 +37,6 @@ app.use(helmet.hsts({maxAge: 16070400000, includeSubdomains: true}));
 app.use(helmet.frameguard('deny'));
 app.disable('x-powered-by');
 app.use(compress());
-app.use(favicon(__dirname + '/../nwjs/icon.png'));
 app.use(bodyParser.json());
 app.engine('html', engines.hogan);
 app.set('view engine', 'html');
@@ -49,6 +48,7 @@ app.use(function(req, res, next) { // Strip redundant headers, that break the pr
   }
   next();
 });
+app.use(favicon(__dirname + '/../nwjs/icon.png'));
 app.use('/static', express['static'](__dirname + '/../www/static'));
 /*app.use(session({
   cookie: { secure: true },
@@ -108,19 +108,18 @@ var auth = function (req, res, next) {
 };
 //}
 
-//{ Server Push
-/*/ Disabled for now. Problems with nginx integration and compression.
+//{ Server Push (does not work through nginx)
 var mimes = {
   types: {
-    'js': {'content-type': 'application/javascript'},
-    'json': {'content-type': 'application/json'},
-    'css': {'content-type': 'text/css; charset=UTF-8'},
-    'txt': {'content-type': 'text/plain; charset=UTF-8'},
-    'jpg': {'content-type': 'image/jpeg'},
-    'png': {'content-type': 'image/png'}
+    'js': 'application/javascript',
+    'json': 'application/json',
+    'css': 'text/css; charset=UTF-8',
+    'txt': 'text/plain; charset=UTF-8',
+    'jpg': 'image/jpeg',
+    'png': 'image/png'
   },
   exts: {
-    '.js': ['js', true], // True menas, should be compressed.
+    '.js': ['js', true], // True menas, should be compressed
     '.json': ['json', true],
     '.jpg': ['jpg'],
     '.png': ['png'],
@@ -130,13 +129,13 @@ var mimes = {
 };
 function mime(file) {
   var ext = file.substr(file.lastIndexOf('.'));
-  var ret = mimes.types[mimes.exts[ext][0]];
+  var headers = {};
+  headers['content-type'] = mimes.types[mimes.exts[ext][0]];
   if (push_compressed.indexOf(file) >= 0) {
-    ret['content-encoding'] = 'gzip';
-    ret['accept-ranges'] = 'bytes';
-    ret['vary'] = 'accept-encoding';
+    headers['content-encoding'] = 'gzip';
+    headers['accept-ranges'] = 'bytes';
   }
-  return ret;
+  return headers;
 }
 
 var push_files = [
@@ -150,8 +149,8 @@ var push_files = [
   'hu.png',
   'l20n.min.js',
   'main.min.js',
-  'func.min.js',
-  'background.jpg'
+  'func.min.js'
+  //'background.jpg' // Browsers do not accept large files, they prefer to get them themselves
 ];
 push_cache = {}, push_compressed = [];
 
@@ -160,30 +159,33 @@ function fillPushCache() {
     this.buffs.push(chunk);
     done();
   }
-  function errHandler(e){console.log(e);}
+  function errHandler(e){
+    console.log(e);
+  }
   function finisher() {
     push_cache[this.file] = Buffer.concat(this.buffs);
     push_compressed.push(this.file);
   }
-  var size;
+  var file, size, path = __dirname + '/../www/static/';
   for (var i = 0; i < push_files.length; i++) {
-    size = fs.statSync(__dirname + '/../www/static/' + push_files[i])['size'];
-    if (!mimes.exts[push_files[i].substr(push_files[i].lastIndexOf('.'))][1] || size < 1024) { // If not compressible, or too small
-      push_cache[push_files[i]] = fs.readFileSync(__dirname + '/../www/static/' + push_files[i]);
+    file = push_files[i];
+    size = fs.statSync(path + file).size;
+    if (!mimes.exts[file.substr(file.lastIndexOf('.'))][1] || size < 1024) { // If not compressible, or too small
+      push_cache[file] = fs.readFileSync(path + file);
       continue;
     }
     var s = new stream.Writable();
-    s.file = push_files[i];
+    s.file = file;
     s.buffs = [];
     s._write = writer;
     s.on('error', errHandler);
     s.on('finish', finisher);
-    fs.createReadStream(__dirname + '/../www/static/' + push_files[i])
+    fs.createReadStream(path + file)
       .pipe(zlib.createGzip())
       .pipe(s);
   }
 }
-fillPushCache();
+if (argv.push) fillPushCache();
 
 function pusher(req, res) {
   if (!res.push) // If proxied through nginx
@@ -191,15 +193,14 @@ function pusher(req, res) {
 
   function pushHandler(err, stream) {
     stream.on('error', function(err) {
-      if (err.code != 'RST_STREAM') // Browser canceled the request (probably)
+      if (err.code != 'RST_STREAM' && err.message != 'Write after end!') { // Browser cancelled the request (probably)
         console.log(err);
+      }
     });
   }
 
   function pushIt(file) {
     var s = res.push('/static/' + file, mime(file), pushHandler);
-    //var bufferStream = new stream.PassThrough();
-    //bufferStream.end(push_cache[file]);
     var bufferStream = new stream.Transform();
     bufferStream.push(push_cache[file]);
     bufferStream.end();
@@ -210,7 +211,6 @@ function pusher(req, res) {
     pushIt(push_files[i]);
   }
 }
-/*/
 //}
 
 //{ Page handling
@@ -218,11 +218,11 @@ app.get(/^.+\/$/, function(req, res) {
   res.redirect(301, '/');
 });
 app.get('/', function(req, res) {
-  //pusher(req, res);
+  if (argv.push) pusher(req, res);
   res.render('index'/*, {'min': minified}*/);
 });
 app.get('/status', auth, function(req, res) {
-  //pusher(req, res);
+  if (argv.push) pusher(req, res);
   res.render('status', {'state': 'state = ' + JSON.stringify(getStatus()) + ';'});
 });
 app.get('/status_source', function(req, res) {
