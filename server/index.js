@@ -149,6 +149,7 @@ var push_files = [
   'locale/hu.png',
   'l20n.min.js',
   'main.min.js',
+  'pako.min.js',
   'func.min.js'
   //'background.jpg' // Browsers do not accept large files, they prefer to get them themselves
 ];

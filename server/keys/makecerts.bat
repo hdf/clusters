@@ -4,10 +4,11 @@ if "%1"=="" goto blank
 set host=%1
 
 rem openssl dhparam -out dh4096.pem 4096
-if not exist root.key openssl ecparam -genkey -name secp521r1 -out root.key
+rem Google decided to fuck us, so no more secp521r1: https://code.google.com/p/chromium/issues/detail?id=477623
+if not exist root.key openssl ecparam -genkey -name secp384r1 -out root.key
 if not exist root.crt openssl req -new -x509 -nodes -sha512 -days 3650 -key root.key -out root.crt -subj "/C=HU/ST=Pest/L=Budapest/emailAddress=admin@%host%/CN=\%host% Root CA"
 
-if not exist server.key openssl ecparam -genkey -name secp521r1 -out server.key
+if not exist server.key openssl ecparam -genkey -name secp384r1 -out server.key
 
 set cnf=server.cnf
 if exist %cnf% goto gotcnf

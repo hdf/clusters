@@ -55,8 +55,13 @@ function ajax(url, data, cb) {
       cb(req.responseText);
   };
   req.open('POST', url, true);
-  req.setRequestHeader('Content-type', 'application/json');
-  req.send(JSON.stringify(data));
+  data = JSON.stringify(data);
+  req.setRequestHeader('Content-Type', 'application/json');
+  if (data.length > 1024) { // Compress if bigger than 1K
+    req.setRequestHeader('Content-Encoding', 'gzip');
+    data = new Blob([pako.gzip(data)], {type: 'application/json'});
+  }
+  req.send(data);
 }
 
 function getPackage() {

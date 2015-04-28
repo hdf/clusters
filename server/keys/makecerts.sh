@@ -8,14 +8,14 @@ host=$1
 
 #openssl dhparam -out dh4096.pem 4096
 if [ ! -f ./root.key ]; then
-  openssl ecparam -genkey -name secp521r1 -out root.key
+  openssl ecparam -genkey -name secp384r1 -out root.key
 fi
 if [ ! -f ./root.crt ]; then
   openssl req -new -x509 -nodes -sha512 -days 3650 -key root.key -out root.crt -subj "/C=HU/ST=Pest/L=Budapest/emailAddress=admin@$host/CN=\\$host Root CA"
 fi
 
 if [ ! -f ./server.key ]; then
-  openssl ecparam -genkey -name secp521r1 -out server.key
+  openssl ecparam -genkey -name secp384r1 -out server.key
 fi
 
 cnf=server.cnf
