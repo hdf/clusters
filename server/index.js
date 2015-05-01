@@ -9,6 +9,7 @@ var spdy = require('spdy'),
     engines = require('consolidate'),
     //uuid = require('node-uuid').v4,
     basicAuth = require('basic-auth'),
+    users = require('./users.json'),
     argv = require('minimist')(process.argv.slice(2)),
     UglifyJS = require("uglify-js"),
     //CleanCSS = require('clean-css'),
@@ -99,7 +100,7 @@ var auth = function (req, res, next) {
   }
   if (!user || !user.name || !user.pass || (ips[ip] && (Date.now() - ips[ip].lastTry) < 6e5 && ips[ip].tries > 2)) // 3 tries every 10 minutes
     return unauthorized();
-  if (user.name === 'marco' && user.pass === 'polo') {
+  if (users[user.name] && users[user.name] === user.pass) {
     if (ips[ip]) delete ips[ip]; // Amnesty :)
     return next();
   } else {

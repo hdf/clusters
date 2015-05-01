@@ -22,12 +22,12 @@ Or just type:
 
 #### Create self signed certificates by:
 >opening shell (cmd.exe),
->navigating to `clusters\server\keys`,
+>navigating to `clusters/server/keys`,
 >running makecerts.bat like this: `makecerts example.com`
 
 <br>
 ## Creating a work project
-**navigate to** `clusters\server\db`**, and edit** `projects.json`.
+**navigate to** `clusters/server/db`**, and edit** `projects.json`.
 
 #### **projects.json format**:
 ```javascript
@@ -42,7 +42,7 @@ Or just type:
 ```
 
 <br>
-**create** `clusters\server\db\project1_name.json`  
+**create** `clusters/server/db/project1_name.json`  
 _(This file contains the input data to be processed by WebWorkers on the clients (browsers).)_
 
 #### **project1_name.json format**:
@@ -51,7 +51,7 @@ _(This file contains the input data to be processed by WebWorkers on the clients
 (The elements of the array don't have to be numbers, they can be anything, json objects, arrays...)
 
 <br>
-**create** `clusters\server\db\project1_name.js`  
+**create** `clusters/server/db/project1_name.js`  
 _(This file contains the function that will run on the WebWorkers on the clients (browsers). The sole argument is an element of the array defined in `project1_name.json`.)_
 
 #### **project1_name.js example**:
@@ -69,7 +69,7 @@ Look inside `run.bat` for various ways of running the clusters server. In a prod
 To start processing the data, navigate to https://localhost:8082/#auto (by default).
 
 To see, how overall processing of projects is doing, and download results, navigate to https://localhost:8082/status.  
-The default user/password is marco/polo. (For now, can only be changed in `clusters\server\index.js`.)
+The default user/password is marco/polo. (Users can be managed in the file `clusters/server/users.json`.)
 
 To remotely restart the server, navigate to https://localhost:8082/restart
 
