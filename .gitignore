@@ -7,3 +7,4 @@ main.min.js
 *.key
 *.crt
 node_modules
+coverage

@@ -29,11 +29,12 @@
     "consolidate": ">= 0.12.1",
     "minimist": ">= 1.1.1",
     "uglify-js": ">= 2.4.20",
-    "clean-css": ">= 3.2.5",
+    "clean-css": ">= 3.2.6",
     "serve-favicon": ">= 2.2.0"
   },
   "devDependencies": {
-    "mocha": ">= 2.2.4"
+    "mocha": ">= 2.2.4",
+    "istanbul": ">= 0.3.13"
   },
   "engines": [
     "node >= 0.12.2",
@@ -43,6 +44,7 @@
   "scripts": {
     "start": "forever start -w --minUptime 1000 --spinSleepTime 1000 server --port 8082 --forever",
     "stop": "forever stop server",
-    "test": "mocha --reporter spec test/tests.js"
+    "test": "mocha --reporter spec test/tests.js",
+    "istanbul": "istanbul cover server -- --forever --push"
   }
 }

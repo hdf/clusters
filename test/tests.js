@@ -1,9 +1,21 @@
 var assert = require('assert'),
     //exec = require('child_process').execSync,
     spawn = require('child_process').spawn,
-    https = require('https');
+    https = require('https'),
+    net = require('net');
 
-var server, port = '8082';
+var server, port = '8082', no_server = false;
+
+//{ Check if server is already running
+var tst_srv = net.createServer();
+tst_srv.once('error', function(err) {
+  if (err.code === 'EADDRINUSE') no_server = true;
+});
+tst_srv.once('listening', function() {
+  tst_srv.close();
+});
+tst_srv.listen(port);
+//}
 
 function connect(cb, path, method) {
   path = path || '/';
@@ -27,6 +39,7 @@ describe('Clusters', function() {
   //this.timeout(5000);
 
   before(function(done) {
+    if (no_server) return done();
     //exec('npm start');
     server = spawn('node', ['server', '--port', port]);
     server.stderr.on('data', function(data) {
@@ -36,6 +49,7 @@ describe('Clusters', function() {
   });
 
   it('server started', function(done) {
+    if (no_server) return done();
     server.stdout.on('data', function(data) {
       assert.equal(data.toString().substr(-1 - port.length, port.length), port);
       done();
@@ -63,6 +77,7 @@ describe('Clusters', function() {
   });
 
   after(function() {
+    if (no_server) return;
     //exec('npm stop');
     server.kill();
   });
