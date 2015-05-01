@@ -1,1 +1,20 @@
-[{"test":{"chunkSize":3,"completed":false}},{"test2":{"chunkSize":4,"completed":false}},{"test3":{"chunkSize":4,"completed":false}}]
+[
+  {
+    "test": {
+      "chunkSize": 3,
+      "completed": false
+    }
+  },
+  {
+    "test2": {
+      "chunkSize": 4,
+      "completed": false
+    }
+  },
+  {
+    "test3": {
+      "chunkSize": 4,
+      "completed": false
+    }
+  }
+]

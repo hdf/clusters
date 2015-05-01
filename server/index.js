@@ -409,6 +409,7 @@ function updateDb(db, arr, compact, finder) {
   if (cn > 0) {
     fs.writeFileSync(__dirname + '/db/' + db + '.changes', '');
     if (compact) arr = arrayfy(arr);
+    fs.writeFile(__dirname + '/db/' + db + '.json', JSON.stringify(arr, null, 2) + ((arr.length > 0)?'\n':''), function(err){if(err)throw err;});
   }
   return arr;
 }
