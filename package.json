@@ -23,22 +23,22 @@
     "express": ">= 4.12.3",
     "forever": ">= 0.14.1",
     "hogan.js": ">= 3.0.2",
-    "compression": ">= 1.4.3",
-    "body-parser": ">= 1.12.3",
+    "compression": ">= 1.4.4",
+    "body-parser": ">= 1.12.4",
     "basic-auth": ">= 1.0.1",
     "consolidate": ">= 0.12.1",
     "minimist": ">= 1.1.1",
     "uglify-js": ">= 2.4.21",
-    "clean-css": ">= 3.2.8",
-    "serve-favicon": ">= 2.2.0"
+    "clean-css": ">= 3.2.10",
+    "serve-favicon": ">= 2.2.1"
   },
   "devDependencies": {
     "mocha": ">= 2.2.4",
     "istanbul": ">= 0.3.13"
   },
   "engines": [
-    "node >= 0.12.2",
-    "iojs >= 2.0.0"
+    "node >= 0.12.3",
+    "iojs >= 2.0.2"
   ],
   "main": "server",
   "scripts": {
