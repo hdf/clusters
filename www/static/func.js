@@ -6,6 +6,13 @@
 })();
 //}
 
+//{ #auto checkbox
+document.getElementById('auto').onclick = function() {
+  history.replaceState({page: 0}, document.title, (this.checked)?'/#auto':'/');
+};
+document.getElementById('auto').checked = (window.location.hash == '#auto');
+//}
+
 //{ Spawn workers
 var workers = [];
 var proc = (typeof(localStorage.proc) != 'undefined' && localStorage.proc.length > 0)?localStorage.proc:'';
