@@ -12,33 +12,28 @@
     "type": "git",
     "url": "https://github.com/hdf/clusters.git"
   },
-  "homepage": "https://github.com/hdf/clusters",
-  "author": {
-    "name": "hdf",
-    "email": "hdf@users.noreply.github.com"
-  },
   "dependencies": {
     "spdy": ">= 1.32.0",
-    "helmet": ">= 0.9.0",
+    "helmet": ">= 0.9.1",
     "express": ">= 4.12.4",
     "forever": ">= 0.14.1",
     "hogan.js": ">= 3.0.2",
-    "compression": ">= 1.4.4",
+    "compression": ">= 1.5.0",
     "body-parser": ">= 1.12.4",
-    "basic-auth": ">= 1.0.1",
+    "basic-auth": ">= 1.0.2",
     "consolidate": ">= 0.13.1",
     "minimist": ">= 1.1.1",
     "uglify-js": ">= 2.4.23",
-    "clean-css": ">= 3.2.10",
+    "clean-css": ">= 3.3.1",
     "serve-favicon": ">= 2.2.1"
   },
   "devDependencies": {
     "mocha": ">= 2.2.5",
-    "istanbul": ">= 0.3.14"
+    "istanbul": ">= 0.3.15"
   },
   "engines": [
     "node >= 0.12.4",
-    "iojs >= 2.1.0"
+    "iojs >= 2.3.0"
   ],
   "main": "server",
   "scripts": {

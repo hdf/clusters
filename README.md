@@ -74,7 +74,7 @@ The default user/password is marco/polo. (Users can be managed in the file `clus
 To remotely restart the server, navigate to https://localhost:8082/restart
 
 <br>
-## Optional nginx reverse proxy configuration:
+## Optional nginx reverse proxy configuration example:
 ```nginx
 http {
   ...
