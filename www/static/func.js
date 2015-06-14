@@ -183,6 +183,7 @@ function bufferCheck() {
 //{ Worker code
 function func() {
   var id = Math.floor(Math.random() * 9999); // Random worker id if not specified
+  if (typeof(asmjs) == 'function') asmjs();
   onmessage = function(e) {
     if (typeof(e.data.id) == 'number') // Assign worker id
       id = e.data.id;
