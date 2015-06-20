@@ -9,5 +9,7 @@ echo. 2>"server\db\projects\test3_results.changes"
 echo. 2>"server\db\projects\test3_results.json"
 echo. 2>"server\db\projects\emscripten demo_results.changes"
 echo. 2>"server\db\projects\emscripten demo_results.json"
+echo. 2>"server\db\projects\RKF Test_results.changes"
+echo. 2>"server\db\projects\RKF Test_results.json"
 
 start server\db\projects.json

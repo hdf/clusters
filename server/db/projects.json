@@ -6,6 +6,12 @@
     }
   },
   {
+    "RKF Test": {
+      "chunkSize": 22,
+      "completed": false
+    }
+  },
+  {
     "emscripten demo": {
       "chunkSize": 3,
       "completed": false

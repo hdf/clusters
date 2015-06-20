@@ -19,7 +19,7 @@ var proc = (typeof(localStorage.proc) != 'undefined' && localStorage.proc.length
 var inputData = (typeof(localStorage.inputData) != 'undefined' && localStorage.inputData.length > 0)?JSON.parse(localStorage.inputData):[];
 var completed; // For progress meter
 var c = 1; // Partition data for workers (dynamic scheduling)
-var staticScheduling = false; // This is a switch!
+var staticScheduling = false; // This is a switch (for the c above)!
 
 function startWorkers() {
   stopWorkers();
@@ -140,7 +140,7 @@ function doWork() {
   document.getElementById('progress').max = inputData.length;
   document.getElementById('progress').value = completed = 0;
   if (staticScheduling)
-    c = Math.ceil(inputData.length / workers.length); // Partition data for workers
+    c = Math.ceil(inputData.length / workers.length); // Partition data for workers (static scheduling)
   for (var i = 0, n = workers.length; i < n; i++) {
     if (inputData.length > i*c) {
       if (!staticScheduling)
@@ -165,8 +165,8 @@ function gotResult(e) {
     for (var i2 = 0; i2 < inputData.length; i2++) {
       if (!inputData[i2].taken) {
         inputData[i2].taken = true;
-        this.postMessage({data: inputData.slice(i2*c, i2*c+c)});
-        return;
+        this.postMessage({data: [inputData[i2]]});
+        break;
       }
     }
   }
