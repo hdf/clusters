@@ -6,6 +6,8 @@ function(d) {
   //j = self['Module'].allocate([j], 'i64', self['Module'].ALLOC_STACK);
   //MMM = self['Module'].allocate([MMM], 'i64', self['Module'].ALLOC_STACK);
   var r = self['Module']._malloc(400);
+  for(var i2 = 0; i2 < 400; i2++) // Clean out area
+    self['Module'].HEAPU8[r+i2] = 0;
   self['Module']._calculate(i, j, MMM, r);
   //var ret = self['Module'].getValue(r, '*');
   var ret = self['Module'].HEAPU8.subarray(r, r+400);
