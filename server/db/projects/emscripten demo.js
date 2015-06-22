@@ -1,5 +1,5 @@
 function(d) {
-  var a = self['Module'].allocate([d], 'i32', self['Module'].ALLOC_STACK);
+  var a = self['Module'].allocate([d], 'i32', self['Module'].ALLOC_NORMAL);
   var r = self['Module']._malloc(4);
   self['Module']._addtoself(a, r);
   var ret = self['Module'].getValue(r, 'i32');
