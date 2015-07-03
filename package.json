@@ -16,24 +16,24 @@
     "spdy": ">= 1.32.0",
     "helmet": ">= 0.9.1",
     "express": ">= 4.13.0",
-    "forever": ">= 0.14.1",
+    "forever": ">= 0.14.2",
     "hogan.js": ">= 3.0.2",
     "compression": ">= 1.5.0",
     "body-parser": ">= 1.13.1",
-    "basic-auth": ">= 1.0.2",
+    "basic-auth": ">= 1.0.3",
     "consolidate": ">= 0.13.1",
     "minimist": ">= 1.1.1",
     "uglify-js": ">= 2.4.23",
-    "clean-css": ">= 3.3.3",
+    "clean-css": ">= 3.3.5",
     "serve-favicon": ">= 2.3.0"
   },
   "devDependencies": {
     "mocha": ">= 2.2.5",
-    "istanbul": ">= 0.3.15"
+    "istanbul": ">= 0.3.17"
   },
   "engines": [
-    "node >= 0.12.4",
-    "iojs >= 2.3.0"
+    "node >= 0.12.5",
+    "iojs >= 2.3.2"
   ],
   "main": "server",
   "scripts": {

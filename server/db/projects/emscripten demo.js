@@ -22,6 +22,8 @@ void addtoself(int* in, int* out) {
 
 After: Module['load'] = importScripts;
 Add:   self['Module'] = Module;
+
+Carefull with 'almost asm', try 'use asm'.
 */
 
 function asmjs() {
@@ -5240,7 +5242,7 @@ Module.asmGlobalArg = { "Math": Math, "Int8Array": Int8Array, "Int16Array": Int1
 Module.asmLibraryArg = { "abort": abort, "assert": assert, "_fflush": _fflush, "_sysconf": _sysconf, "_abort": _abort, "___setErrNo": ___setErrNo, "_sbrk": _sbrk, "_time": _time, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_set_main_loop": _emscripten_set_main_loop, "___errno_location": ___errno_location, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT };
 // EMSCRIPTEN_START_ASM
 var asm = (function(global, env, buffer) {
-  'almost asm';
+  'use asm';
   
   var HEAP8 = new global.Int8Array(buffer);
   var HEAP16 = new global.Int16Array(buffer);
