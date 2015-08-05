@@ -2,7 +2,7 @@
   "name": "clusters",
   "version": "0.0.1",
   "description": "Data processing done on many Browsers with WebWorkers",
-  "license": "GNU AGPLv3",
+  "license": "AGPL-3.0",
   "keywords": [
     "clusters",
     "Web Workers",
@@ -15,11 +15,11 @@
   "dependencies": {
     "spdy": ">= 1.32.4",
     "helmet": ">= 0.10.0",
-    "express": ">= 4.13.1",
-    "forever": ">= 0.15.0",
+    "express": ">= 4.13.3",
+    "forever": ">= 0.15.1",
     "hogan.js": ">= 3.0.2",
-    "compression": ">= 1.5.1",
-    "body-parser": ">= 1.13.2",
+    "compression": ">= 1.5.2",
+    "body-parser": ">= 1.13.3",
     "basic-auth": ">= 1.0.3",
     "consolidate": ">= 0.13.1",
     "minimist": ">= 1.1.2",
@@ -33,7 +33,7 @@
   },
   "engines": [
     "node >= 0.12.7",
-    "iojs >= 2.5.0"
+    "iojs >= 3.0.0"
   ],
   "main": "server",
   "scripts": {
