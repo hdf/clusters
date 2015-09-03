@@ -13,7 +13,7 @@
     "url": "https://github.com/hdf/clusters.git"
   },
   "dependencies": {
-    "spdy": ">= 1.32.4",
+    "spdy": ">= 2.0.5",
     "helmet": ">= 0.10.0",
     "express": ">= 4.13.3",
     "forever": ">= 0.15.1",
@@ -22,18 +22,18 @@
     "body-parser": ">= 1.13.3",
     "basic-auth": ">= 1.0.3",
     "consolidate": ">= 0.13.1",
-    "minimist": ">= 1.1.2",
+    "minimist": ">= 1.2.0",
     "uglify-js": ">= 2.4.24",
-    "clean-css": ">= 3.3.7",
+    "clean-css": ">= 3.4.1",
     "serve-favicon": ">= 2.3.0"
   },
   "devDependencies": {
-    "mocha": ">= 2.2.5",
-    "istanbul": ">= 0.3.17"
+    "mocha": ">= 2.3.0",
+    "istanbul": ">= 0.3.19"
   },
   "engines": [
     "node >= 0.12.7",
-    "iojs >= 3.0.0"
+    "iojs >= 3.3.0"
   ],
   "main": "server",
   "scripts": {
