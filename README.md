@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/hdf/clusters.svg)](https://travis-ci.org/hdf/clusters)
 <br>
 ## Installation (Windows)
-Install [node.js](https://nodejs.org/en/)
+Install [Node.js](https://nodejs.org/en/)
 Install [Chrome](https://www.google.com/chrome/browser/desktop/) and/or [Firefox](https://www.mozilla.org/en-US/firefox/all/)  
 Install [OpenSSL](http://slproweb.com/products/Win32OpenSSL.html) (for self signed certificate generation)  
 Install forever (`npm install forever -g`)  
