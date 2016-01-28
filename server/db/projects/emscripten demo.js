@@ -10,7 +10,7 @@ function(d) {
 
 /* To Build:
 emsdk activate
-emcc emscripten_demo.cpp -s NO_EXIT_RUNTIME=1 -s INVOKE_RUN=0 -s EXPORTED_FUNCTIONS="['_addtoself']" -o "emscripten demo.js"
+emcc emscripten_demo.cpp -O3 -s NO_EXIT_RUNTIME=1 -s INVOKE_RUN=0 -s EXPORTED_FUNCTIONS="['_addtoself']" -o "emscripten demo.js"
 
 emscripten_demo.cpp:
 extern "C" {

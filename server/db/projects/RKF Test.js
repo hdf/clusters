@@ -19,7 +19,7 @@ function(d) {
 
 /* To Build:
 emsdk activate
-emcc RKF7_4D_heterokl_Daninak.cpp -s NO_EXIT_RUNTIME=1 -s INVOKE_RUN=0 -s EXPORTED_FUNCTIONS="['_calculate']" -o "RKF Test.js"
+emcc RKF7_4D_heterokl_Daninak.cpp -O3 -s NO_EXIT_RUNTIME=1 -s INVOKE_RUN=0 -s EXPORTED_FUNCTIONS="['_calculate']" -o "RKF Test.js"
 
 c++ Interface:
 extern "C" {
