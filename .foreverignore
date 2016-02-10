@@ -10,3 +10,4 @@ func.min.js
 main.min.js
 *.log
 .git/*
+.vscode/*

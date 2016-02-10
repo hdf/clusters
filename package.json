@@ -1,12 +1,13 @@
 {
   "name": "clusters",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Data processing done on many Browsers with WebWorkers",
   "license": "AGPL-3.0",
   "keywords": [
     "clusters",
     "Web Workers",
-    "WebWorkers"
+    "WebWorkers",
+    "distributed computing"
   ],
   "repository": {
     "type": "git",
@@ -29,7 +30,7 @@
   },
   "devDependencies": {
     "istanbul": "^0.4.2",
-    "mocha": "^2.4.4"
+    "mocha": "^2.4.5"
   },
   "main": "server",
   "scripts": {
