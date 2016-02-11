@@ -223,6 +223,9 @@ app.get('/', function(req, res) {
   if (argv.push) pusher(req, res);
   res.render('index'/*, {'min': minified}*/);
 });
+app.get('/ca', function(req, res) {
+  res.end(options.ca);
+});
 app.get('/status', auth, function(req, res) {
   if (argv.push) pusher(req, res);
   res.render('status', {'state': 'state = ' + JSON.stringify(getStatus()) + ';'});
