@@ -8,7 +8,7 @@
 
 //{ #auto checkbox
 document.getElementById('auto').onclick = function() {
-  history.replaceState({page: 0}, document.title, (this.checked)?'/#auto':'/');
+  history.replaceState({page: 0}, document.title, (window.location.pathname + ((this.checked)?'#auto':'')));
 };
 document.getElementById('auto').checked = (window.location.hash == '#auto');
 //}

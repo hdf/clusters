@@ -11,5 +11,7 @@ echo. 2>"server\db\projects\emscripten demo_results.changes"
 echo. 2>"server\db\projects\emscripten demo_results.json"
 echo. 2>"server\db\projects\RKF Test_results.changes"
 echo. 2>"server\db\projects\RKF Test_results.json"
+echo. 2>"server\db\projects\RKF Test DLL_results.changes"
+echo. 2>"server\db\projects\RKF Test DLL_results.json"
 
 start server\db\projects.json

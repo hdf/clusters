@@ -11,7 +11,7 @@ var spdy = require('spdy'),
     basicAuth = require('basic-auth'),
     users = require('./users.json'),
     argv = require('minimist')(process.argv.slice(2)),
-    UglifyJS = require("uglify-js"),
+    UglifyJS = require('uglify-js'),
     //CleanCSS = require('clean-css'),
     favicon = require('serve-favicon'),
     fs = require('fs'),
@@ -23,6 +23,9 @@ var options = {
   cert: fs.readFileSync(__dirname + '/keys/server.crt'),
   ca: fs.readFileSync(__dirname + '/keys/root.crt')
 };
+
+if (!fs.existsSync(__dirname + '/db/projects/dll'))
+  fs.mkdirSync(__dirname + '/db/projects/dll');
 //}
 
 //{ Minify client js and css files
@@ -77,6 +80,7 @@ app.use(function(req, res, next) {
     req.method + ' - ' +
     req.url + ' - ' +
     req.headers['user-agent']
+    //+ ' - ' + JSON.stringify(req.body)
   );
   next();
 });
@@ -266,6 +270,12 @@ app.post('/get', function(req, res) {
   for (var i = 0, n = Object.keys(packages).length; i < n; i++) { // Select first project, if all packages completed, or empty, move to next one
     proj = Object.keys(packages)[i];
     n2 = Object.keys(packages[proj]).length;
+    var tmp_dlls = JSON.parse(JSON.stringify(dlls));
+    delete tmp_dlls[proj];
+    if ((i < n-1) && (dlls[proj] && !req.body.arch) || // If this is a dll project, but the client does not support dll -s,
+        (dlls[proj] && req.body.arch && typeof(dlls[proj][req.body.arch]) !== 'string') || // or we do not support the architecture,
+        (req.body.arch && JSON.stringify(tmp_dlls).indexOf(req.body.arch) != -1 && !(dlls[proj] && typeof(dlls[proj][req.body.arch]) === 'string'))) // or we have dll projects with this arch, but this is not it, than skip (prioritisation) (currently problematic)
+      continue;
     for (var i2 = 0; i2 < n2; i2++) { // Select first package, if completed, or empty, move to next one
       pkgN = Object.keys(packages[proj])[i2];
       if (proj && pkgN) { // If package exists ( might be unnecessary, but lets just keep it anyway, for luck :) )
@@ -282,6 +292,9 @@ app.post('/get', function(req, res) {
         packages[proj][pkgN].t = json.time; // Update memory store
         if (req.body.packageId.split('_')[0] != proj) // If we give a new package, also give function, which to apply to the data
           json.func = funcs[proj];
+        if (req.body.arch && dlls[proj] && typeof(dlls[proj][req.body.arch]) === 'string')
+          json.dll = dlls[proj][req.body.arch];
+        //logger(JSON.stringify(json));
         res.write(JSON.stringify(json));
         done = true;
         break;
@@ -291,6 +304,12 @@ app.post('/get', function(req, res) {
   }
   if (!done) res.write('{}');
   res.end();
+});
+app.post('/dll', function(req, res) {
+  if (dlls[req.body.proj] && typeof(dlls[req.body.proj][req.body.arch]) === 'string')
+    res.download(__dirname + '/db/projects/dll/' + dlls[req.body.proj][req.body.arch]);
+  else
+    res.status(404).end();
 });
 app.post('/result', function(req, res) {
   processResult(req.body);
@@ -329,7 +348,7 @@ server.listen(port, function(){logger('Clusters server started at ' + new Date()
 //}
 
 //{ Database loading
-var projects, completed, packages = {}, funcs = {}, results = {};
+var projects, completed, packages = {}, funcs = {}, dlls = {}, results = {};
 try {
   projects = JSON.parse(fs.readFileSync(__dirname + '/db/projects.json'));
 } catch(err) {
@@ -356,7 +375,13 @@ function loadDb() {
     id = first(projects[i]);
     if (!projects[i][id].completed) {
       projects[i][id].completed = false;
-      packages[id] = chunk(id, projects[i][id].chunkSize, completed);
+      packages[id] = chunk(id, (projects[i][id].chunkSize || 1), completed);
+      if (projects[i][id].dll) {
+        dlls[id] = JSON.parse(JSON.stringify(projects[i][id]));
+        delete dlls[id].dll;
+        delete dlls[id].completed;
+        delete dlls[id].chunkSize;
+      }
       funcs[id] = (fs.existsSync(__dirname + '/db/projects/' + id + '.js'))?fs.readFileSync(__dirname + '/db/projects/' + id + '.js').toString().trim():''; // Cache project function
     }
     // Update project results changes
@@ -484,6 +509,7 @@ function processResult(result) {
       }
     delete results[pkg[0]];
     delete packages[pkg[0]];
+    delete dlls[pkg[0]];
     fs.readFile(__dirname + '/db/projects/' + pkg[0] + '_results.json', {encoding: 'utf-8'}, function (err, data) {
       updateDb('projects/' + pkg[0] + '_results', (data)?JSON.parse(data):[], true);
     });

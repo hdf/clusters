@@ -9,4 +9,5 @@ main.min.js
 node_modules
 .vscode/*
 coverage
+!*.dll
 todo.txt

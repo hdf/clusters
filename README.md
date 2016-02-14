@@ -27,7 +27,8 @@ Or just type:
 
 <br>
 ## Creating a work project
-**navigate to** `clusters/server/db`**, and edit** `projects.json`.
+**navigate to** `clusters/server/db`**, and edit** `projects.json`.  
+**Project names must be unique!**
 
 #### **projects.json format**:
 ```javascript
@@ -37,7 +38,12 @@ Or just type:
     "completed":false
   }},
   {"project2_name":{"chunkSize":4,"completed":false}},
-  {"project3_name":{"chunkSize":4,"completed":false}
+  {"project3_name":{"chunkSize":200,"completed":false}},
+  {"project4_name":{
+    "dll": true,
+    "win32_64": "judit1.dll",
+    "completed":false
+  }}
 ]
 ```
 

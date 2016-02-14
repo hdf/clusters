@@ -6,6 +6,13 @@
     }
   },
   {
+    "RKF Test DLL": {
+      "dll": true,
+      "win32_64": "judit1.dll",
+      "completed": false
+    }
+  },
+  {
     "RKF Test": {
       "chunkSize": 200,
       "completed": false
